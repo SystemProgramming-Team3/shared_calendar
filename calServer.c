@@ -14,9 +14,10 @@
 #define BUF_SIZE 1024
 #define MAX_FILE_CONTENTS_LENGTH 128
 
-void error_handling(char* buf);
-char* isMonDir(char* buf); // 2023.04 디렉토리 안에 디렉토리를 탐색해서 어느 날에 일정이 있는지 반환
-char* isDayDir(char* buf); // 2023.04 -> 07 -> 텍스트 파일의 제목과 내용 반환 
+void error_handling(char*);
+char* isMonDir(char*); // 2023.04 디렉토리 안에 디렉토리를 탐색해서 어느 날에 일정이 있는지 반환
+char* isDayDir(char*); // 2023.04 -> 07 -> 텍스트 파일의 제목과 내용 반환 
+void addSchedule(char*, char*);
 
 int main(int argc, char* argv[])
 {
@@ -32,12 +33,6 @@ int main(int argc, char* argv[])
 
 	char* days;
 	char* txtfile;
-
-	char delimeter[] = " "; // 띄어쓰기로 parsing
-	char parsing[4][50];
-	char* ptr;
-	int p = 0;
-
 
 	if (argc != 2) {
 		printf("Usage : %s <port>\n", argv[0]);
@@ -89,7 +84,14 @@ int main(int argc, char* argv[])
 						printf("closed client: %d \n", i);
 					}
 
-					p = 0;
+					char buf2[sizeof(buf)];
+					strcpy(buf2, buf);
+
+					char delimeter[] = " "; // 띄어쓰기로 parsing
+					char parsing[4][50];
+					char* ptr;
+					int p = 0;
+
 					ptr = strtok(buf, delimeter);
 
 					while (ptr != NULL) {
@@ -98,35 +100,30 @@ int main(int argc, char* argv[])
 					}
 
 					if (strcmp(parsing[0], "cc") == 0) {
-						days = isMonDir(parsing[1]);  // cc 2023.04 입력 받으면 days에 "1,2,15,31," 저장. if 2023.04 디렉토리 없으면 생성하고 ","만 저장.
+						days = isMonDir(parsing[1]);  // "cc 2023.04" 입력 받으면 days에 "1,2,15,31," 저장. if 2023.04 디렉토리 없으면 생성하고 ","만 저장.
 						write(i, days, strlen(days)); // ex) server->client ",1,2,15,31," 
 					}
 					else if (strcmp(parsing[0], "c") == 0) {
-						txtfile = isDayDir(parsing[1]); // c 2023.04.07 입력 받으면 일정 제목(.txt)과 txt 내용 저장. if 07 디렉토리 없으면 ">" 만 저장.
+						txtfile = isDayDir(parsing[1]); // "c 2023.04.07" 입력 받으면 일정 제목(.txt)과 txt 내용 반환. if 07 디렉토리 없으면 ">" 만 저장.
 						write(i, txtfile, strlen(txtfile)); // serve->client ">PT.txt 13:00~14:00 GYM >birthday.txt 09:00~10:00"
 					}
-					else if (strcmp(parsing[0], "a") == 0) {
-
+					else if (strcmp(parsing[0], "a") == 0) {  // "a 2023.04.07 key>contents" 입력 받으면 일정 key(.txt)와 contents 저장.
+						addSchedule(parsing[1], &buf2[13]);
+						days = isMonDir(parsing[1]);
+						write(i, days, strlen(days));
 					}
-
-
-					/*if(str_len == 8){ // ex) 2023.04 -> 8char
-						days = isMonDir(buf); // 2023.04 입력 받으면 days에 "1,2,15,31," 저장. if 2023.04 디렉토리 없으면 생성하고 ","만 저장.
-						write(i, days, strlen(days)); // ex) server->client ",1,2,15,31,"
-					}
-					else if(str_len == 11){ // ex) 2023.04.07 -> 11char
-						txtfile = isDayDir(buf); // 2023.04.07 입력 받으면 일정 제목(.txt)과 txt 내용 저장. if 07 디렉토리 없으면 ">" 만 저장.
-						write(i, txtfile, strlen(txtfile)); // serve->client ">PT.txt 13:00~14:00 GYM >birthday.txt 09:00~10:00"
-					}*/
-					/*else{
-						write(i, buf, str_len);
-					}*/
 				}
 			}
 		}
 	}
-	close(serv_sock);
+
 	return 0;
+}
+
+void error_handling(char* buf) {
+	fputs(buf, stderr);
+	fputc('\n', stderr);
+	exit(1);
 }
 
 char* isMonDir(char* tmpfile) {
@@ -236,9 +233,57 @@ char* isDayDir(char* tmpfile) {
 	return ptr; // 반환
 }
 
-void error_handling(char* buf)
-{
-	fputs(buf, stderr);
-	fputc('\n', stderr);
-	exit(1);
+void addSchedule(char* tmpfile, char* contents){
+	DIR* dir;
+	FILE* fp;
+
+	char filename[1024] = "\0";
+	char dayname[1024] = "\0";
+	char txtname[1024] = "\0";
+
+	char delimeter[] = ">"; //  parsing
+	char parsing[2][50];
+	char* ptr;
+	int p = 0;
+	int i;
+
+
+	for (i = 0; i < 7; i++) {
+		filename[i] = tmpfile[i];
+	}
+	filename[7] = '/';
+	for (i = 8; i < 10; i++) {
+		dayname[i - 8] = tmpfile[i];
+	}
+
+
+	strcat(filename, dayname);
+
+	dir = opendir(filename); // 일정을 넣을 날짜 디렉토리 열기
+
+	if (dir == NULL) { 
+		mkdir(filename, 0755);
+		dir = opendir(filename);
+	}
+
+	ptr = strtok(contents, delimeter);
+
+	while (ptr != NULL) {
+		strcpy(parsing[p++], ptr);
+		ptr = strtok(NULL, delimeter);
+	}
+
+	strcat(txtname, filename);
+	strcat(txtname, "/");
+	strcat(txtname, parsing[0]);
+	strcat(txtname, ".txt");
+	creat(txtname, 0755);
+
+	puts(parsing[1]);
+	fp = fopen(txtname, "w+");
+	fputs(parsing[1], fp);
+	
+	closedir(dir);
+	close(fp);
+	return;
 }
