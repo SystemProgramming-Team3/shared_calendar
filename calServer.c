@@ -18,6 +18,7 @@ void error_handling(char*);
 char* isMonDir(char*); // 2023.04 디렉토리 안에 디렉토리를 탐색해서 어느 날에 일정이 있는지 반환
 char* isDayDir(char*); // 2023.04 -> 07 -> 텍스트 파일의 제목과 내용 반환 
 void addSchedule(char*, char*);
+void rmSchedule(char*, char*);
 
 int main(int argc, char* argv[])
 {
@@ -109,6 +110,11 @@ int main(int argc, char* argv[])
 					}
 					else if (strcmp(parsing[0], "a") == 0) {  // "a 2023.04.07 key>contents" 입력 받으면 일정 key(.txt)와 contents 저장.
 						addSchedule(parsing[1], &buf2[13]);
+						days = isMonDir(parsing[1]);
+						write(i, days, strlen(days));
+					}
+					else if (strcmp(parsing[0], "rm") == 0) {
+						rmSchedule(parsing[1], parsing[2]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
 					}
@@ -286,4 +292,7 @@ void addSchedule(char* tmpfile, char* contents){
 	closedir(dir);
 	close(fp);
 	return;
+}
+
+void rmSchedule(char* tmpfile, char* contents) {
 }
