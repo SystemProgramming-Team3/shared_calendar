@@ -85,7 +85,8 @@ int main(int argc, char* argv[])
 						printf("closed client: %d \n", i);
 					}
 
-					char buf2[sizeof(buf)];
+					buf[str_len - 1] = '\0';
+					char buf2[BUF_SIZE] = "\0";
 					strcpy(buf2, buf);
 
 					char delimeter[] = " "; // 띄어쓰기로 parsing
@@ -113,7 +114,7 @@ int main(int argc, char* argv[])
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
 					}
-					else if (strcmp(parsing[0], "rm") == 0) {
+					else if (strcmp(parsing[0], "rm") == 0) { // "rm 2023.04.07 birthday" birthday.txt 삭제, 삭제 후 7일에 일정이 하나도 없다면 07폴더도 삭제
 						rmSchedule(parsing[1], parsing[2]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
@@ -142,10 +143,7 @@ char* isMonDir(char* tmpfile) {
 	int i;
 	char* ptr = ",";
 
-	for (i = 0; i < 7; i++) {
-		filename[i] = tmpfile[i];
-	}
-
+	for (i = 0; i < 7; i++) filename[i] = tmpfile[i];
 
 	dir = opendir("."); // 현재 디렉토리를 열기-[
 
@@ -166,10 +164,7 @@ char* isMonDir(char* tmpfile) {
 				ptr = strcat(dayname, direntp2->d_name);
 				ptr = strcat(dayname, ",");
 			}
-
-
 			closedir(dir2);
-
 			return ptr; // 2023.04 디렉토리 안에 1, 3, 10, 31 디렉토리 있다면 ",1,3,10,31" 반환 
 		}
 	}
@@ -193,17 +188,11 @@ char* isDayDir(char* tmpfile) {
 	int i;
 	char* ptr = "";
 
-	for (i = 0; i < 7; i++) {
-		filename[i] = tmpfile[i];
-	}
+	for (i = 0; i < 7; i++) filename[i] = tmpfile[i];
 	filename[7] = '/';
-	for (i = 8; i < 10; i++) {
-		dayname[i - 8] = tmpfile[i];
-	}
-
+	for (i = 8; i < 10; i++) dayname[i - 8] = tmpfile[i];
 
 	strcat(filename, dayname);
-
 	dir = opendir(filename); // 현재 디렉토리를 열기
 
 	if (dir == NULL) {
@@ -225,7 +214,6 @@ char* isDayDir(char* tmpfile) {
 			strcat(schedule, direntp->d_name);
 			strcat(schedule, " ");
 
-			printf("Contents of %s:\n", direntp->d_name);
 			while (fgets(contents, MAX_FILE_CONTENTS_LENGTH, fp) != NULL) { // 파일 내용 출력
 				strcat(schedule, contents);
 			}
@@ -252,7 +240,6 @@ void addSchedule(char* tmpfile, char* contents){
 	char* ptr;
 	int p = 0;
 	int i;
-
 
 	for (i = 0; i < 7; i++) {
 		filename[i] = tmpfile[i];
@@ -295,4 +282,44 @@ void addSchedule(char* tmpfile, char* contents){
 }
 
 void rmSchedule(char* tmpfile, char* contents) {
+	DIR* dir;
+
+	struct dirent* direntp;
+
+	char filename[1024] = "\0";
+	char filename2[1024] = "\0";
+	char dayname[1024] = "\0";
+	char txtname[1024] = "\0";
+
+	int i;
+	int file_count = 0;
+	char* ptr = "";
+
+	for (i = 0; i < 7; i++) filename[i] = tmpfile[i];
+	filename[7] = '/';
+	for (i = 8; i < 10; i++) dayname[i - 8] = tmpfile[i];
+	strcat(filename, dayname);
+
+	dir = opendir(filename); // 해당하는 날짜의 디렉토리 열기
+
+	if (dir == NULL) {
+		//printf("Failed to open directory\n"\n");
+		return;
+	}
+
+	strcat(txtname, contents);
+	strcat(txtname, ".txt");
+
+	strcat(filename2, filename);
+	strcat(filename2, "/");
+	strcat(filename2, txtname);
+	remove(filename2);
+
+	while ((direntp = readdir(dir)) != NULL) {
+		if (direntp->d_type == DT_REG) file_count++;	
+	}
+
+	if (file_count == 0) rmdir(filename);
+
+	return;
 }
