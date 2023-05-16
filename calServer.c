@@ -235,8 +235,10 @@ char* isDayDir(char* tmpfile) {
 
 void addSchedule(char* tmpfile, char* contents){
 	DIR* dir;
+	DIR* dir2;
 	FILE* fp;
 
+	char fileParent[1024] = "\0";
 	char filename[1024] = "\0";
 	char dayname[1024] = "\0";
 	char txtname[1024] = "\0";
@@ -250,13 +252,17 @@ void addSchedule(char* tmpfile, char* contents){
 	for (i = 0; i < 7; i++) {
 		filename[i] = tmpfile[i];
 	}
+	strcpy(fileParent, filename); 
 	filename[7] = '/';
 	for (i = 8; i < 10; i++) {
 		dayname[i - 8] = tmpfile[i];
 	}
 
-
 	strcat(filename, dayname);
+
+	dir2 = opendir(fileParent); // 없는 달력에 추가하려고 하면 달력 먼저 만들기
+	if (dir2 == NULL) mkdir(fileParent, 0755);
+	else closedir(dir2);
 
 	dir = opendir(filename); // 일정을 넣을 날짜 디렉토리 열기
 
@@ -367,6 +373,7 @@ void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 
 	dir2 = opendir(tarDirParent);
 	if (dir2 == NULL) mkdir(tarDirParent, 0755); // target이 없는 달이면 만들기 
+	else closedir(dir2);
 
 	dir = opendir(tarDir); // 일정을 넣을 날짜 디렉토리 열기
 
@@ -382,6 +389,5 @@ void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 	if (file_count == 0) rmdir(srcDir);
 
 	closedir(dir);
-	closedir(dir2);
 	return;
 }
