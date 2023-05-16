@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
 					}
-					else if (strcmp(parsing[0], "mv") == 0) {
+					else if (strcmp(parsing[0], "mv") == 0) { // "mv 2023.04.07 2023.04.09 birthday"  
 						mvSchedule(parsing[1], parsing[2], parsing[3]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
@@ -325,18 +325,21 @@ void rmSchedule(char* tmpfile, char* contents) {
 		if (direntp->d_type == DT_REG) file_count++;	
 	}
 
-	if (file_count == 0) rmdir(filename);
+	if (file_count == 0) rmdir(filename); // 일정 옮긴 후에 그 날짜에 다른 일정이 하나도 없다면 날짜 삭제
 
 	return;
 }
 
 void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 	DIR* dir;
+	DIR* dir2;
+
 	struct dirent* direntp;
 	int file_count = 0;
 
 	char srcDir[1024] = "\0";
 	char tarDir[1024] = "\0";
+	char tarDirParent[1024] = "\0";
 	char source[1024] = "\0";
 	char target[1024] = "\0";
 	char dayname[1024] = "\0";
@@ -355,11 +358,15 @@ void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 	strcat(source, txtname);
 
 	for (i = 0; i < 7; i++) target[i] = tmpTarget[i];
+	strcpy(tarDirParent, target);
 	target[7] = '/';
 	for (i = 8; i < 10; i++) dayname[i - 8] = tmpTarget[i];
 	strcat(target, dayname);
 	strcpy(tarDir, target);
 	strcat(target, txtname);
+
+	dir2 = opendir(tarDirParent);
+	if (dir2 == NULL) mkdir(tarDirParent, 0755); // target이 없는 달이면 만들기 
 
 	dir = opendir(tarDir); // 일정을 넣을 날짜 디렉토리 열기
 
@@ -375,5 +382,6 @@ void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 	if (file_count == 0) rmdir(srcDir);
 
 	closedir(dir);
+	closedir(dir2);
 	return;
 }
