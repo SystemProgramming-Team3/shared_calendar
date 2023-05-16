@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
 					}
-					else if (strcmp(parsing[0], "mv") == 0) { // "mv 2023.04.07 2023.04.09 birthday"  
+					else if (strcmp(parsing[0], "mv") == 0) { // "mv 2023.04.07 2023.04.09 birthday"  birthday.txt 파일 이동
 						mvSchedule(parsing[1], parsing[2], parsing[3]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
@@ -339,6 +339,7 @@ void rmSchedule(char* tmpfile, char* contents) {
 void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 	DIR* dir;
 	DIR* dir2;
+	FILE* fp;
 
 	struct dirent* direntp;
 	int file_count = 0;
@@ -362,6 +363,8 @@ void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 	strcat(source, dayname);
 	strcpy(srcDir, source);
 	strcat(source, txtname);
+	if ((fp = fopen(source, "r")) == NULL) return;
+	else fclose(fp);
 
 	for (i = 0; i < 7; i++) target[i] = tmpTarget[i];
 	strcpy(tarDirParent, target);
