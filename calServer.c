@@ -283,7 +283,7 @@ void addSchedule(char* tmpfile, char* contents){
 	fputs(parsing[1], fp);
 	
 	closedir(dir);
-	close(fp);
+	fclose(fp);
 	return;
 }
 
