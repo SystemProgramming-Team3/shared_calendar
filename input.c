@@ -8,38 +8,51 @@
 #include <fcntl.h>
 #include <string.h>
 
-//ip,port,커맨드 들어있는 int string
+// ip,port,커맨드 들어있는 int string
 
+int flag = 0;
 int year, month, day, startday;
- int i = 0;int buf[1024];int string[1024];
+int i = 0;
+int buf[1024];
+int string[1024];
+int array[3] = {10, 11, 14};
+int currentday = 1;
 
 void getcurrent();
+void getOther(int, int);
 int day_of_week(int, int);
-void printCal(WINDOW *win);
+void printCal(WINDOW *win, void (*setOn)(WINDOW *));
 void initwin();
+void onCurrent(WINDOW *win);
+void onOther(WINDOW *win);
+void offCurrent(WINDOW *win);
+void offOther(WINDOW *win);
+void (*setOnFn)(WINDOW *) = &onCurrent;
 
 int main()
 {
     initscr();
+    start_color();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
-    int filedes2 = creat("./creat.txt",0644);
+    int filedes2 = creat("./creat.txt", 0644);
 
-
-    for(;;){    
-        initwin(); //이걸 함수포인터로 만들고 싶음. win.h라는 헤더파일 선언해서 함수포인트의 인자가되는 함수들 정의해두면 좋을거같음.
+    for (;;)
+    {
+        initwin();
         /*
         c 명령어는 함수의 content 표현하는 부분 함수화
         cc 명령어는 캘린더 생성하는 부분 함수화
         add content,remove,move content는 캘린더 생성 + content 함수화!
         */
-        //printf("[%ls]",buf); //이걸 서버와 통신해서 서버의 리턴값을 받아오는 함수로 만들고 싶다. 서버에 buf로 받아온 스트링을 주기, 필요하면 데이터 가공까지
+        // printf("[%ls]",buf); //이걸 서버와 통신해서 서버의 리턴값을 받아오는 함수로 만들고 싶다. 서버에 buf로 받아온 스트링을 주기, 필요하면 데이터 가공까지
         /*
         서버에게서 데이터 받아오기
         */
-        write(filedes2, buf, 30);
-        buf[0] = '\0';
+        write(filedes2, buf, 1024);
+        buf[i] = '\0';
+        currentday = 1;
         endwin();
     }
 
@@ -48,40 +61,45 @@ int main()
 
 void initwin()
 {
-    WINDOW *title = newwin(20,30,0,12);
-    mvwprintw(title, 1,0, " _____   ___   _  ");
-    mvwprintw(title, 2,0, "/  __ \\ / _ \\ | |");
-    mvwprintw(title, 3,0, "| /  \\// /_\\ \\| | ");
-    mvwprintw(title, 4,0, "| |    |  _  || |");
-    mvwprintw(title, 5,0, "| \\__/\\| | | || |____");
-    mvwprintw(title, 6,0, " \\____/\\_| |_/\\_____/");
-    mvwprintw(title, 7,4, " _   _  _____ ");
-    mvwprintw(title, 8,4, "| | | |/  ___|");
-    mvwprintw(title, 9,4, "| | | |\\ `--. ");
-    mvwprintw(title, 10,4, "| | | | `--. \\");
-    mvwprintw(title, 11,4, "| |_| |/\\__/ /");
-    mvwprintw(title, 12,4, " \\___/ \\____/ ");
-    
+    WINDOW *title = newwin(20, 30, 0, 12);
+
+    mvwprintw(title, 1, 0, " _____   ___   _  ");
+    mvwprintw(title, 2, 0, "/  __ \\ / _ \\ | |");
+    mvwprintw(title, 3, 0, "| /  \\// /_\\ \\| | ");
+    mvwprintw(title, 4, 0, "| |    |  _  || |");
+    mvwprintw(title, 5, 0, "| \\__/\\| | | || |____");
+    mvwprintw(title, 6, 0, " \\____/\\_| |_/\\_____/");
+    mvwprintw(title, 7, 4, " _   _  _____ ");
+    mvwprintw(title, 8, 4, "| | | |/  ___|");
+    mvwprintw(title, 9, 4, "| | | |\\ `--. ");
+    mvwprintw(title, 10, 4, "| | | | `--. \\");
+    mvwprintw(title, 11, 4, "| |_| |/\\__/ /");
+    mvwprintw(title, 12, 4, " \\___/ \\____/ ");
 
     WINDOW *win = newwin(12, 28, 1, 36);
     box(win, 0, 0);
     mvwprintw(win, 0, 10, "CALENDAR");
-    getcurrent(); // cc 2023.07 -> getotherCal();
+
+    getcurrent(); // cc 2023.07->getotherCal();
+    // getOther(2023, 10);
     mvwprintw(win, 2, 10, " %d/%d ", month, year);
     mvwprintw(win, 4, 3, " Su Mo Tu We Th Fr Sa ");
-    printCal(win);
+    printCal(win, setOnFn);
 
+    // CONTENTS
     WINDOW *win2 = newwin(26, 30, 1, 67);
     box(win2, 0, 0);
     mvwprintw(win2, 0, 12, "CONTENTS");
+    // 내용출력코드( )
+    mvwprintw(win2, 3, 3, "%d.", array[i]);
 
     WINDOW *win3box = newwin(3, 89, 28, 8);
-    box(win3box,0, 0);
+    box(win3box, 0, 0);
     mvwprintw(win3box, 0, 3, "COMMAND");
 
     WINDOW *win3 = newwin(1, 87, 29, 9);
-  
 
+    // USAGE
     WINDOW *win4 = newwin(13, 56, 14, 8);
     box(win4, 0, 0);
     mvwprintw(win4, 0, 4, "USAGE EXAMPLE");
@@ -97,7 +115,7 @@ void initwin()
     mvwprintw(win4, 6, 25, "a 2023.05.14 key>content");
     mvwprintw(win4, 8, 25, "rm 2023.05.14 key");
     mvwprintw(win4, 10, 25, "mv 2023.05.14 2023.05.15 key");
-    
+
     refresh();
     wrefresh(title);
     wrefresh(win);
@@ -105,30 +123,29 @@ void initwin()
     wrefresh(win3box);
     wrefresh(win4);
     wrefresh(win3);
-    
+
     int ch;
-    int pos = 0; int posch = pos;
-    while((ch=fgetc(stdin))!='\r'){
-        if (ch != KEY_BACKSPACE && ch != 127) {
-            mvwaddchstr(win3,0,pos,buf);
+    int pos = 0;
+    int posch = pos;
+    while ((ch = fgetc(stdin)) != '\r')
+    {
+        if (ch != KEY_BACKSPACE && ch != 127)
+        {
+            mvwaddchstr(win3, 0, pos, buf);
             buf[i++] = ch;
             mvwaddch(win3, 0, posch++, ch);
-            wmove(win3,1,posch);
+            wmove(win3, 1, posch);
             wrefresh(win3);
-            
         }
-        else if (i > 0) { 
+        else if (i > 0)
+        {
             i--;
-            buf[i] = '\0';  // remove the last character from the string
-            mvwdelch(win3,0,--posch);
-            wmove(win3,0,posch);
+            buf[i] = '\0'; // remove the last character from the string
+            mvwdelch(win3, 0, --posch);
+            wmove(win3, 0, posch);
             wrefresh(win3);
         }
-        
     }
-
-    //구현해야할것 -> 캐리지리턴들어갔을때 scr끼워맞추는거,  
-    //개행문자 입력받으면 서버에 buf데이터 가공후 넘겨주고, 서버의 응답을 받아 gui 재가공
 }
 
 int day_of_week(int year, int month)
@@ -176,12 +193,16 @@ int day_of_week(int year, int month)
     return temp % 7; // 1=월,2=화...6=토,0=일
 }
 
-void printCal(WINDOW *win)
+void printCal(WINDOW *win, void (*setOn)(WINDOW *win))
 {
+    init_pair(1, COLOR_CYAN, COLOR_BLACK);
+    // wattron(win, COLOR_PAIR(1));
     int row = 5;
-    int col = 2;
-    int days_in_month = 31;
+    int col = 1;
+    int startday = day_of_week(year, month);
+    col += startday * 3;
 
+    int days_in_month = 31;
     switch (month)
     {
     case 2:
@@ -197,33 +218,31 @@ void printCal(WINDOW *win)
         days_in_month = 30;
         break;
     }
-    int startday = day_of_week(year, month);
-    int current_day = 1;
-    col += startday * 2;
-    while (current_day <= days_in_month)
+
+    while (currentday <= days_in_month)
     {
-        // 받은 특정 날짜들 파싱해온 상태에서
-        // if current_day == theday -> 색깔넣는 등 강조
-        if (current_day == day)
+        (*setOn)(win);
+        mvwprintw(win, row, col + 3, "%2d", currentday);
+        if (flag)
         {
-            wattron(win, A_REVERSE);
-        }
-        mvwprintw(win, row, col + 3, "%2d", current_day);
-        wattroff(win, A_REVERSE);
-        if (current_day == day && current_day < 9)
-        {
-            col += 4;
+            offCurrent(win);
         }
         else
         {
-            col += 3;
+            offCurrent(win);
         }
+
+        if (currentday == day && currentday < 9)
+            col += 4;
+        else
+            col += 3;
+
         if (col >= 21)
         {
             row++;
             col = 1;
         }
-        current_day++;
+        currentday++;
     }
 }
 
@@ -235,4 +254,73 @@ void getcurrent()
     year = time_info->tm_year + 1900;
     month = time_info->tm_mon + 1;
     day = time_info->tm_mday;
+}
+
+void getOther(int YEAR, int MONTH)
+{
+    year = YEAR;
+    month = MONTH;
+}
+
+void onCurrent(WINDOW *win)
+{
+    int isHighlighted = 0;
+    // while(array[i]!=0)
+    for (int i = 0; i < 3; i++)
+    {
+        if (currentday == array[i])
+        {
+            isHighlighted = 1;
+            break;
+        }
+    }
+
+    if (currentday == day)
+    {
+        if (isHighlighted)
+            wattron(win, COLOR_PAIR(1) | A_REVERSE);
+        else
+            wattron(win, A_REVERSE);
+    }
+    else if (isHighlighted)
+    {
+        wattron(win, COLOR_PAIR(1));
+    }
+}
+
+void onOther(WINDOW *win)
+{
+    int isHighlighted = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        if (currentday == array[i])
+        {
+            isHighlighted = 1;
+            break;
+        }
+    }
+
+    if (isHighlighted)
+    {
+        wattron(win, COLOR_PAIR(1));
+    }
+}
+
+void offCurrent(WINDOW *win)
+{
+    wattroff(win, COLOR_PAIR(1));
+    wattroff(win, A_REVERSE);
+
+    /*    if (current_day == day && isHighlighted)
+            wattroff(win, COLOR_PAIR(1) && A_REVERSE);
+        else if (current_day == day)
+            wattroff(win, A_REVERSE);
+        else if (isHighlighted)
+            wattroff(win, COLOR_PAIR(1));
+            */
+}
+
+void offOther(WINDOW *win)
+{
+    wattroff(win, COLOR_PAIR(1));
 }
