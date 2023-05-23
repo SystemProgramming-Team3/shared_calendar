@@ -39,6 +39,7 @@ int main()
         서버에게서 데이터 받아오기
         */
         write(filedes2, buf, 30);
+	//ret = client_func("127.0.0.1", "3000", input);
         buf[0] = '\0';
         endwin();
     }

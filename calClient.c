@@ -8,7 +8,25 @@
 #define BUF_SIZE 1024
 void error_handling(char *message);
 
-int main(int argc, char *argv[])
+char* client_func(char* ip, char* port, char* input);
+int main(void)
+{
+	char input[256];
+	char *ret;
+	FILE * fp = fopen("creat.txt", "r");
+	fgets(input, sizeof(input), fp);
+
+	//gets(input);
+	//fgets(input, sizeof(input), stdin);
+	ret = client_func("127.0.0.1", "3000", input);
+	printf("%s\n", ret);
+	return 0;
+}
+
+
+
+
+char* client_func(char* ip, char* port, char* input)
 {
 	int sock;
 	char message[BUF_SIZE];
@@ -18,34 +36,43 @@ int main(int argc, char *argv[])
 	char *command = NULL;
 	struct sockaddr_in serv_adr;
 	int add = 0;
+	int del_idx = 0;
+	char comm[3][256];
+	char ret[1024];
+	//if(argc!=3) {
+		//printf("Usage : %s <IP> <port>\n", argv[0]);
+		//exit(1);
+	//}
 
-
-	if(argc!=3) {
-		printf("Usage : %s <IP> <port>\n", argv[0]);
-		exit(1);
-	}
-
+	//input = "Test Test2 Test3";
+	//char test[] = "TEST1 2 3";
+	//char *ptr = strtok(input, " ");
+	//while(ptr!=NULL)
+	//{
+		//strcpy(comm[del_idx], ptr);
+		//printf("%s\n", comm[del_idx]);
+		//ptr = strtok(NULL, " ");
+	//}
 	sock=socket(PF_INET, SOCK_STREAM, 0);
 	if(sock==-1)
 		error_handling("socket() error");
 	
 	memset(&serv_adr, 0, sizeof(serv_adr));
 	serv_adr.sin_family = AF_INET;
-	serv_adr.sin_addr.s_addr = inet_addr(argv[1]);
-	serv_adr.sin_port=htons(atoi(argv[2]));
+	serv_adr.sin_addr.s_addr = inet_addr(ip);
+	serv_adr.sin_port=htons(atoi(port));
 
 	if(connect(sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr))==-1)
 		error_handling("connect() error!");
 	else
+		{
 		puts("Connected......");
 
-	while(1)
-	{
-		fputs("Input Command (Input :help to show help): ", stdout);
-		fgets(message, BUF_SIZE, stdin);
 
-		if(!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
-			break;
+		strcpy(message, input);
+		//if(!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
+			//break;
+		/*
 		if(!strcmp(message, ":help\n"))
 		{
 			fprintf(stdout,"\033[0;31m======LIST OF COMMANDS======\n");
@@ -55,6 +82,7 @@ int main(int argc, char *argv[])
 			fprintf(stdout, "%c[0m\n", 27);
 			continue;
 		}
+		*/
 		if(message[0]=='a')
 		{
 			add=1;
@@ -70,17 +98,22 @@ int main(int argc, char *argv[])
 		if(add==1)
 		{
 			
-		printf("Added Schedule\n");
-		printf("The day that schedule exists that month: %s\n", message);
+		//printf("Added Schedule\n");
+		//printf("The day that schedule exists that month: %s\n", message);
 		add=  0;
+		sprintf(ret, "Added Schedule\nThe day that schedule exists that month: %s\n", message);
 		}
 		else{
-			printf("The Schedule is: %s \n", message);
+			//printf("The Schedule is: %s \n", message);
+			
+			sprintf(ret, "The Schedule is: %s \n", message);
 		}
+		//printf("%s\n", ret);
 	}
 	close(sock);
-	return 0;
+	return ret;
 }
+
 
 void error_handling(char *message)
 {
