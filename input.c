@@ -2,9 +2,16 @@
 #include <stdlib.h>
 #include <curses.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+
+//ip,port,커맨드 들어있는 int string
 
 int year, month, day, startday;
-int pos = 2; int i = 0;
+ int i = 0;int buf[1024];int string[1024];
 
 void getcurrent();
 int day_of_week(int, int);
@@ -17,50 +24,66 @@ int main()
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
+    int filedes2 = creat("./creat.txt",0644);
 
-    for (;;)
-        initwin();
 
-    endwin();
-
-    char string[30];
+    for(;;){    
+        initwin(); //이걸 함수포인터로 만들고 싶음. win.h라는 헤더파일 선언해서 함수포인트의 인자가되는 함수들 정의해두면 좋을거같음.
+        /*
+        c 명령어는 함수의 content 표현하는 부분 함수화
+        cc 명령어는 캘린더 생성하는 부분 함수화
+        add content,remove,move content는 캘린더 생성 + content 함수화!
+        */
+        //printf("[%ls]",buf); //이걸 서버와 통신해서 서버의 리턴값을 받아오는 함수로 만들고 싶다. 서버에 buf로 받아온 스트링을 주기, 필요하면 데이터 가공까지
+        /*
+        서버에게서 데이터 받아오기
+        */
+        write(filedes2, buf, 30);
+	//ret = client_func("127.0.0.1", "3000", input);
+        buf[0] = '\0';
+        endwin();
+    }
 
     return 0;
 }
 
 void initwin()
 {
+    WINDOW *title = newwin(20,30,0,12);
+    mvwprintw(title, 1,0, " _____   ___   _  ");
+    mvwprintw(title, 2,0, "/  __ \\ / _ \\ | |");
+    mvwprintw(title, 3,0, "| /  \\// /_\\ \\| | ");
+    mvwprintw(title, 4,0, "| |    |  _  || |");
+    mvwprintw(title, 5,0, "| \\__/\\| | | || |____");
+    mvwprintw(title, 6,0, " \\____/\\_| |_/\\_____/");
+    mvwprintw(title, 7,4, " _   _  _____ ");
+    mvwprintw(title, 8,4, "| | | |/  ___|");
+    mvwprintw(title, 9,4, "| | | |\\ `--. ");
+    mvwprintw(title, 10,4, "| | | | `--. \\");
+    mvwprintw(title, 11,4, "| |_| |/\\__/ /");
+    mvwprintw(title, 12,4, " \\___/ \\____/ ");
+    
 
-    WINDOW *win = newwin(12, 28, 1, 30);
+    WINDOW *win = newwin(12, 28, 1, 36);
     box(win, 0, 0);
     mvwprintw(win, 0, 10, "CALENDAR");
-    getcurrent();
+    getcurrent(); // cc 2023.07 -> getotherCal();
     mvwprintw(win, 2, 10, " %d/%d ", month, year);
     mvwprintw(win, 4, 3, " Su Mo Tu We Th Fr Sa ");
     printCal(win);
 
-    WINDOW *win2 = newwin(25, 30, 1, 60);
+    WINDOW *win2 = newwin(26, 30, 1, 67);
     box(win2, 0, 0);
     mvwprintw(win2, 0, 12, "CONTENTS");
 
-    WINDOW *win3 = newwin(3, 88, 26, 2);
-    box(win3, 0, 0);
-    mvwprintw(win3, 0, 3, "COMMAND");
-    int ch= getch();
-    int string[1000];
+    WINDOW *win3box = newwin(3, 89, 28, 8);
+    box(win3box,0, 0);
+    mvwprintw(win3box, 0, 3, "COMMAND");
 
-    if (ch != KEY_BACKSPACE && ch != 127) {
-    string[i++] = ch;
-    mvwaddchstr(win3, 1, pos, string);
-    }
-    else if (i > 0) {  // check if string is not empty
-        i--;
-        string[i] = '\0';  // remove the last character from the string
-        mvwaddchstr(win3, 1, pos, string);
-    }
+    WINDOW *win3 = newwin(1, 87, 29, 9);
+  
 
-
-    WINDOW *win4 = newwin(13, 56, 13, 2);
+    WINDOW *win4 = newwin(13, 56, 14, 8);
     box(win4, 0, 0);
     mvwprintw(win4, 0, 4, "USAGE EXAMPLE");
     wattron(win4, A_REVERSE);
@@ -74,14 +97,39 @@ void initwin()
     mvwprintw(win4, 4, 25, "cc 2023.05");
     mvwprintw(win4, 6, 25, "a 2023.05.14 key>content");
     mvwprintw(win4, 8, 25, "rm 2023.05.14 key");
-    mvwprintw(win4, 10, 25, "mv 2023.05.14 2023.05.15");
-
+    mvwprintw(win4, 10, 25, "mv 2023.05.14 2023.05.15 key");
+    
     refresh();
+    wrefresh(title);
     wrefresh(win);
     wrefresh(win2);
-    wrefresh(win3);
+    wrefresh(win3box);
     wrefresh(win4);
-    getch();
+    wrefresh(win3);
+    
+    int ch;
+    int pos = 0; int posch = pos;
+    while((ch=fgetc(stdin))!='\r'){
+        if (ch != KEY_BACKSPACE && ch != 127) {
+            mvwaddchstr(win3,0,pos,buf);
+            buf[i++] = ch;
+            mvwaddch(win3, 0, posch++, ch);
+            wmove(win3,1,posch);
+            wrefresh(win3);
+            
+        }
+        else if (i > 0) { 
+            i--;
+            buf[i] = '\0';  // remove the last character from the string
+            mvwdelch(win3,0,--posch);
+            wmove(win3,0,posch);
+            wrefresh(win3);
+        }
+        
+    }
+
+    //구현해야할것 -> 캐리지리턴들어갔을때 scr끼워맞추는거,  
+    //개행문자 입력받으면 서버에 buf데이터 가공후 넘겨주고, 서버의 응답을 받아 gui 재가공
 }
 
 int day_of_week(int year, int month)
