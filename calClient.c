@@ -15,29 +15,40 @@ char *c_client_func(char *ip, char *port, char *input);
 
 
 
-// client_func Function Test용 Dummy Code (main function)
+// client_func Function Test용 Stub Code (main function)
 int main(void)
 {
 	char input[256];
 	int *ret;
 	int * cret;
+	char* cdret;
 	int i = 0;
 	FILE * fp = fopen("creat.txt", "r");
 	fgets(input, sizeof(input), fp);
 
-	//gets(input);
-	//fgets(input, sizeof(input), stdin);
-	ret = cc_client_func("127.0.0.1", "3000", input);
-	for(i=0;i<31;i++)
-	{
-		printf("%d\n", ret[i]);
-	}
-	cret = a_client_func("127.0.0.1", "3000", "a 2023.05.29 test>testc");
 
-	for(i=0;i<31;i++)
-	{
-		printf("%d\n", cret[i]);
-	}
+	// ret = cc_client_func("127.0.0.1", "3000", input);
+	// for(i=0;i<31;i++)
+	// {
+	// 	printf("%d\n", ret[i]);
+	// }
+	// cret = a_client_func("127.0.0.1", "3000", "a 2023.05.23 you>your");
+
+	// for(i=0;i<31;i++)
+	// {
+	// 	printf("%d\n", cret[i]);
+	// }
+	cdret = c_client_func("127.0.0.1", "3000", "c 2023.05.23 ");
+	
+	
+	char k = 'a';
+	char *juso = cdret;
+	printf("final: %s\n", cdret);
+	cdret = cdret+BUF_SIZE;
+	printf("final: %s\n", cdret);
+
+	//printf("final: %s\n", cdret[1]);
+
 	return 0;
 }
 
@@ -62,7 +73,8 @@ char *c_client_func(char *ip, char *port, char *input)
 	char comm[3][256];
 	char ret[BUF_SIZE];
 	char *ptr = NULL;
-	char res_array[33][BUF_SIZE];
+	char *tit_ptr = NULL;
+	char res_array[BUF_SIZE][BUF_SIZE];
 	int cal_array[31];
 	// if(argc!=3) {
 	// printf("Usage : %s <IP> <port>\n", argv[0]);
@@ -136,22 +148,28 @@ char *c_client_func(char *ip, char *port, char *input)
 			// printf("The Schedule is: %s \n", message);
 
 			sprintf(ret, "The Schedule is: %s \n", message);
-			ptr = strtok(message, ",");
+			ptr = strtok(message, "> ");
 			while (ptr != NULL)
 			{
-				strcpy(res_array, ptr);
-				// printf("origin: %s\n", ptr);
-				// printf("string: %s\n", res_array[del_idx]);
-				cal_array[del_idx] = atoi(ptr);
-				// printf("d: %d\n", cal_array[del_idx]);
-				ptr = strtok(NULL, ",");
+				if(strcmp(ptr, ".txt"))
+				{
+				strcpy(res_array[del_idx], ptr);
+				printf("origin: %s\n", ptr);
+				printf("resar: %s\n",res_array[del_idx]);
 				del_idx++;
+				}
+
+				// printf("string: %s\n", res_array[del_idx]);
+				//cal_array[del_idx] = atoi(ptr);
+				// printf("d: %d\n", cal_array[del_idx]);
+				ptr = strtok(NULL, "> ");
+				
 			}
 		}
 		// printf("%s\n", ret);
 	}
 	close(sock);
-	return ret;
+	return (char*)res_array;
 }
 
 int *a_client_func(char *ip, char *port, char *input)
@@ -225,6 +243,7 @@ int *a_client_func(char *ip, char *port, char *input)
 		// command = strtok(message, " ");
 		// strcpy(temp, command);
 		// printf("%s\n", temp);
+		sprintf(message, "%s \0", message);
 		write(sock, message, strlen(message));
 		str_len = read(sock, message, BUF_SIZE - 1);
 		message[str_len] = 0;
