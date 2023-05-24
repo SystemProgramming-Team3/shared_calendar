@@ -27,25 +27,25 @@ int main(void)
 	fgets(input, sizeof(input), fp);
 
 
-	// ret = cc_client_func("127.0.0.1", "3000", input);
-	// for(i=0;i<31;i++)
-	// {
-	// 	printf("%d\n", ret[i]);
-	// }
-	// cret = a_client_func("127.0.0.1", "3000", "a 2023.05.23 you>your");
+	 ret = cc_client_func("127.0.0.1", "3001", input);
+	 for(i=0;i<31;i++)
+	 {
+	 	printf("%d\n", ret[i]);
+	 }
+	//cret = a_client_func("127.0.0.1", "3001", "a 2023.05.23 you>your");
 
-	// for(i=0;i<31;i++)
-	// {
-	// 	printf("%d\n", cret[i]);
-	// }
-	cdret = c_client_func("127.0.0.1", "3000", "c 2023.05.23 ");
+	//for(i=0;i<31;i++)
+	//{
+	 	//printf("%d\n", cret[i]);
+	//}
+	//cdret = c_client_func("127.0.0.1", "3000", "c 2023.05.23 ");
 	
 	
-	char k = 'a';
-	char *juso = cdret;
-	printf("final: %s\n", cdret);
-	cdret = cdret+BUF_SIZE;
-	printf("final: %s\n", cdret);
+	//char k = 'a';
+	//char *juso = cdret;
+	//printf("final: %s\n", cdret);
+	//cdret = cdret+BUF_SIZE;
+	//printf("final: %s\n", cdret);
 
 	//printf("final: %s\n", cdret[1]);
 
