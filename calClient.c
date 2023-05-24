@@ -23,15 +23,17 @@ int main(void)
 	int * cret;
 	char* cdret;
 	int i = 0;
-	FILE * fp = fopen("creat.txt", "r");
-	fgets(input, sizeof(input), fp);
+	//FILE * fp = fopen("creat.txt", "r");
+	//fgets(input, sizeof(input), fp);
 
 
-	 ret = cc_client_func("127.0.0.1", "3001", input);
-	 for(i=0;i<31;i++)
-	 {
-	 	printf("%d\n", ret[i]);
-	 }
+	ret = cc_client_func("127.0.0.1", "3001", "cc 2023.05 ");
+
+	
+	for(int i=0;i<31;i++)
+	{
+		printf("%d\n", ret[i]);
+	}
 	//cret = a_client_func("127.0.0.1", "3001", "a 2023.05.23 you>your");
 
 	//for(i=0;i<31;i++)
@@ -305,7 +307,7 @@ int* cc_client_func(char* ip, char* port, char* input)
 	char ret[BUF_SIZE];
 	char *ptr = NULL;
 	char res_array[33][BUF_SIZE];
-	int cal_array[31];
+	int * cal_array = malloc(sizeof(int)*31);
 		// if(argc!=3) {
 		// printf("Usage : %s <IP> <port>\n", argv[0]);
 		// exit(1);
@@ -365,6 +367,8 @@ int* cc_client_func(char* ip, char* port, char* input)
 		write(sock, message, strlen(message));
 		str_len=read(sock, message, BUF_SIZE-1);
 		message[str_len]=0;
+
+		printf("%s",message);
 		
 		if(add==1)
 		{
@@ -377,7 +381,7 @@ int* cc_client_func(char* ip, char* port, char* input)
 		else{
 			//printf("The Schedule is: %s \n", message);
 			
-			sprintf(ret, "The Schedule is: %s \n", message);
+			printf("The Schedule is: %s \n", message);
 			ptr = strtok(message, ",");
 			while(ptr!=NULL)
 			{
@@ -393,6 +397,8 @@ int* cc_client_func(char* ip, char* port, char* input)
 		//printf("%s\n", ret);
 	}
 	close(sock);
+
+
 	return cal_array;
 }
 

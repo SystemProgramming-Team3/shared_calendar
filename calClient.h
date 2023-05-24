@@ -98,7 +98,7 @@ char *c_client_func(char *ip, char *port, char *input)
 	{
 		// error_handling("connect() error!");
 		cal_array[0] = -1;
-		return cal_array;
+		return (char *)cal_array;
 	}
 	else
 	{

@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
-#include <calClient.h>
+#include "calClient.h"
 
 // ip,port,커맨드 들어있는 int string
 
@@ -59,14 +59,19 @@ int main()
         printf("[%s]", string);
         char *str = strtok(string, " ");
         printf("%s\n\n", str);
-
-        int *ret = malloc(sizeof(int) * 31);
+		char test[15] = "aadfsf";
+		char* test2 = malloc(sizeof(char)*15);
+		strcpy(test2,"abcd");
+        int *ret;
+        
+        
         if (!strcmp(str, "cc"))
         {
-            ret = cc_client_func("127.0.0.1", "3000", string + 3);
+            ret = cc_client_func("127.0.0.1", "3000", "cc 2023.05");
             for (int k = 0; k < 10; k++)
                 printf("[%d]", ret[i]);
         }
+        
         buf = calloc(1024, sizeof(int));
         string[0] = '\0';
 
