@@ -15,7 +15,7 @@ int flag = 0;
 int year, month, day, startday;
 int i = 0;
 int *buf;
-char string[1024];
+char *string;
 int array[3] = {10, 11, 14};
 int currentday = 1;
 
@@ -39,10 +39,10 @@ int main()
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
-    // int filedes2 = creat("./creat.txt", 0644);
 
     for (;;)
     {
+        string = malloc(sizeof(char) * 1024);
         i = 0;
         currentday = 1;
         initwin(); // 이걸 함수포인터로 만들고 싶음. win.h라는 헤더파일 선언해서 함수포인트의 인자가되는 함수들 정의해두면 좋을거같음.
@@ -56,22 +56,24 @@ int main()
         // write(filedes2, buf, 30);
 
         intArrayToCharArray(buf, string, 1024);
-        printf("[%s]", string);
-        char *str = strtok(string, " ");
-        printf("%s\n\n", str);
-		char test[15] = "aadfsf";
-		char* test2 = malloc(sizeof(char)*15);
-		strcpy(test2,"abcd");
+        // printf("[%s]", string);
         int *ret;
-        
-        
-        if (!strcmp(str, "cc"))
+
+        ret = cc_client_func("127.0.0.1", "3000", string);
+        for (int i = 0; i < 30; i++)
         {
-            ret = cc_client_func("127.0.0.1", "3000", "cc 2023.05");
-            for (int k = 0; k < 10; k++)
-                printf("[%d]", ret[i]);
+            printf("<%d>", ret[i]);
         }
-        
+        char *str = strtok(string, " ");
+        // printf("%s\n\n", str);
+
+        // if (!strcmp(str, "cc"))
+        //{
+        //     ret = cc_client_func("127.0.0.1", "3000","cc 2023.05 ");
+        //     for (int k = 0; k < 10; k++)
+        //        printf("[%d]", ret[i]);
+        //}
+
         buf = calloc(1024, sizeof(int));
         string[0] = '\0';
 
