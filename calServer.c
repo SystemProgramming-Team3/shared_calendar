@@ -8,9 +8,10 @@
 #include <sys/select.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
+#include <stdbool.h>
 #include <dirent.h>
 #include <errno.h>
+
 #define BUF_SIZE 1024
 #define MAX_FILE_CONTENTS_LENGTH 128
 
@@ -20,9 +21,11 @@ char* isDayDir(char*); // 2023.04 -> 07 -> 텍스트 파일의 제목과 내용 
 void addSchedule(char*, char*);
 void rmSchedule(char*, char*);
 void mvSchedule(char*, char*, char*);
+bool isLeapYear(int);
+bool isValidDate(const char*);
+bool isValidMonth(const char*);
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
 	int serv_sock, clnt_sock;
 	struct sockaddr_in serv_adr, clnt_adr;
 	struct timeval timeout;
@@ -34,7 +37,9 @@ int main(int argc, char* argv[])
 	char* d;
 
 	char* days;
+	int year, month;
 	char* txtfile;
+	char* type_error = "input error";
 
 	if (argc != 2) {
 		printf("Usage : %s <port>\n", argv[0]);
@@ -103,27 +108,55 @@ int main(int argc, char* argv[])
 					}
 
 					if (strcmp(parsing[0], "cc") == 0) {
+						if ((parsing[1][4] != '.') || (strlen(parsing[1]) != 7) || (!isValidMonth(parsing[1]))) {
+							write(i, "error", strlen("error"));
+							continue;
+						}
 						days = isMonDir(parsing[1]);  // "cc 2023.04" 입력 받으면 days에 "1,2,15,31," 저장. if 2023.04 디렉토리 없으면 생성하고 ","만 저장.
 						write(i, days, strlen(days)); // ex) server->client ",1,2,15,31," 
+
 					}
 					else if (strcmp(parsing[0], "c") == 0) {
+						if ((parsing[1][4] != '.') || (parsing[1][7] != '.') || (strlen(parsing[1]) != 10) || (!isValidDate(parsing[1]))) {
+							write(i, "error", strlen("error"));
+							continue;
+						}
 						txtfile = isDayDir(parsing[1]); // "c 2023.04.07" 입력 받으면 일정 제목(.txt)과 txt 내용 반환. if 07 디렉토리 없으면 ">" 만 저장.
 						write(i, txtfile, strlen(txtfile)); // serve->client ">PT.txt 13:00~14:00 GYM >birthday.txt 09:00~10:00"
 					}
 					else if (strcmp(parsing[0], "a") == 0) {  // "a 2023.04.07 key>contents" 입력 받으면 일정 key(.txt)와 contents 저장.
+						if ((parsing[1][4] != '.') || (parsing[1][7] != '.') || (strlen(parsing[1]) != 10) || (!isValidDate(parsing[1]))) {
+							write(i, "error", strlen("error"));
+							continue;
+						}
 						addSchedule(parsing[1], &buf2[13]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
 					}
 					else if (strcmp(parsing[0], "rm") == 0) { // "rm 2023.04.07 birthday" birthday.txt 삭제, 삭제 후 7일에 일정이 하나도 없다면 07폴더도 삭제
+						if ((parsing[1][4] != '.') || (parsing[1][7] != '.') || (strlen(parsing[1]) != 10) || (!isValidDate(parsing[1]))) {
+							write(i, "error", strlen("error"));
+							continue;
+						}
 						rmSchedule(parsing[1], parsing[2]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
 					}
-					else if (strcmp(parsing[0], "mv") == 0) { // "mv 2023.04.07 2023.04.09 birthday"  birthday.txt 파일 이동
+					else if (strcmp(parsing[0], "mv") == 0) { // "mv 2023.04.07 2023.04.09 birthday"  
+						if ((parsing[1][4] != '.') || (parsing[1][7] != '.') || (strlen(parsing[1]) != 10) || (!isValidDate(parsing[1]))) {
+							write(i, "error", strlen("error"));
+							continue;
+						}
+						else if ((parsing[2][4] != '.') || (parsing[2][7] != '.') || (strlen(parsing[2]) != 10) || (!isValidDate(parsing[2]))) {
+							write(i, "error", strlen("error"));
+							continue;
+						}
 						mvSchedule(parsing[1], parsing[2], parsing[3]);
 						days = isMonDir(parsing[1]);
 						write(i, days, strlen(days));
+					}
+					else {
+						write(i, "error", strlen("error"));
 					}
 				}
 			}
@@ -233,7 +266,7 @@ char* isDayDir(char* tmpfile) {
 	return ptr; // 반환
 }
 
-void addSchedule(char* tmpfile, char* contents){
+void addSchedule(char* tmpfile, char* contents) {
 	DIR* dir;
 	DIR* dir2;
 	FILE* fp;
@@ -252,7 +285,7 @@ void addSchedule(char* tmpfile, char* contents){
 	for (i = 0; i < 7; i++) {
 		filename[i] = tmpfile[i];
 	}
-	strcpy(fileParent, filename); 
+	strcpy(fileParent, filename);
 	filename[7] = '/';
 	for (i = 8; i < 10; i++) {
 		dayname[i - 8] = tmpfile[i];
@@ -266,7 +299,7 @@ void addSchedule(char* tmpfile, char* contents){
 
 	dir = opendir(filename); // 일정을 넣을 날짜 디렉토리 열기
 
-	if (dir == NULL) { 
+	if (dir == NULL) {
 		mkdir(filename, 0755);
 		dir = opendir(filename);
 	}
@@ -287,7 +320,7 @@ void addSchedule(char* tmpfile, char* contents){
 	puts(parsing[1]);
 	fp = fopen(txtname, "w+");
 	fputs(parsing[1], fp);
-	
+
 	closedir(dir);
 	fclose(fp);
 	return;
@@ -328,7 +361,7 @@ void rmSchedule(char* tmpfile, char* contents) {
 	remove(filename2);
 
 	while ((direntp = readdir(dir)) != NULL) {
-		if (direntp->d_type == DT_REG) file_count++;	
+		if (direntp->d_type == DT_REG) file_count++;
 	}
 
 	if (file_count == 0) rmdir(filename); // 일정 옮긴 후에 그 날짜에 다른 일정이 하나도 없다면 날짜 삭제
@@ -393,4 +426,49 @@ void mvSchedule(char* tmpSource, char* tmpTarget, char* key) {
 
 	closedir(dir);
 	return;
+}
+
+bool isLeapYear(int year) {
+	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+bool isValidMonth(const char* dateString) {
+	int year, month;
+	if (sscanf(dateString, "%4d.%2d", &year, &month) != 2) {
+		return false; // 형식에 맞지 않는 경우
+	}
+
+	// 유효한 날짜 범위 확인
+	if (year < 1900 || month < 1 || month > 12) {
+		return false; // 유효한 날짜 범위를 벗어난 경우
+	}
+
+	return true;
+}
+bool isValidDate(const char* dateString) {
+	int year, month, day;
+	if (sscanf(dateString, "%4d.%2d.%2d", &year, &month, &day) != 3) {
+		return false; // 형식에 맞지 않는 경우
+	}
+
+
+	// 유효한 날짜 범위 확인
+	if (year < 1900 || month < 1 || month > 12 || day < 1) {
+		return false; // 유효한 날짜 범위를 벗어난 경우
+	}
+
+	// 월별로 가능한 날짜 범위 확인
+	int maxDays = 31;
+	if (month == 4 || month == 6 || month == 9 || month == 11) {
+		maxDays = 30;
+	}
+	else if (month == 2) {
+		maxDays = isLeapYear(year) ? 29 : 28;
+	}
+
+	if (day > maxDays) {
+		return false; // 유효한 날짜 범위를 벗어난 경우
+	}
+
+	return true; // 유효한 날짜 형식인 경우
 }
