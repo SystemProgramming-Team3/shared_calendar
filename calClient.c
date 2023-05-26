@@ -17,6 +17,7 @@ int* mv_client_func(char* ip, char* port, char* input);
 
 
 // client_func Function Test용 Stub Code (main function)
+
 /*
 int main(void)
 {
@@ -43,8 +44,8 @@ int main(void)
 	// {
 	//  	printf("cret: %d\n", cret[i]);
 	// }
-	//cdret = c_client_func("127.0.0.1", "3001", "c 2023.05.26 ");
-	//puts(cdret);
+	cdret = c_client_func("127.0.0.1", "3000", "c 2023.05.29 ");
+	puts(cdret);
 	//printf("final:%s", cdret);
 	// char k = 'a';
 	// char *juso = cdret;
@@ -56,6 +57,7 @@ int main(void)
 
 	return 0;
 }
+
 */
 
 void read_command_and_send()
@@ -64,6 +66,46 @@ void read_command_and_send()
 
 
 }
+
+char* trim(char* origin) {
+	
+	char* res_array = (char*)malloc(sizeof(char)*BUF_SIZE);
+	int idx = 0;
+	
+	int iter = 0;
+	int empty = 0;
+	int prev = '\0';
+
+	for(iter = 0;origin[iter]!='\0';iter++) {
+		if(origin[iter]=='\n') {
+			if(empty==0) {
+				res_array[idx++] = '\n';
+			}
+			empty = 1;
+		} else if(origin[iter]!=' '&& origin[iter]!='\t') {
+			res_array[idx++] = origin[iter];
+			empty = 0;
+		} else if(prev!=' '&& prev!='\t') {
+			res_array[idx++] = origin[iter];
+		}
+		prev = origin[idx];
+	}
+	res_array[idx] = '\0';
+	return res_array;
+}
+				
+	
+
+void stringfilter(char *str, char *findstr) {
+	int length = strlen(findstr);
+	char *ptr = strstr(str, findstr);
+	while(ptr!=NULL)
+	{
+		memmove(ptr, ptr+length, strlen(ptr+length)+1);
+		ptr = strstr(str, findstr);
+	}
+}
+
 
 char *c_client_func(char *ip, char *port, char *input)
 {
@@ -82,6 +124,7 @@ char *c_client_func(char *ip, char *port, char *input)
 	char *tit_ptr = NULL;
 	char *res_array;
 	int cal_array[31];
+	char* findptr;
 
 
 
@@ -158,7 +201,22 @@ char *c_client_func(char *ip, char *port, char *input)
 			// printf("The Schedule is: %s \n", message);
 
 			sprintf(ret, "The Schedule is: %s \n", message);
-			ptr = strtok(message, "> ");
+		
+			findptr = strstr(message, "txt");
+			/*
+			while(findptr !=EOF)
+			{
+				strncpy(findptr, "", 3);
+				findptr++;
+			}
+			*/
+			printf("location: %s", message);
+			
+			stringfilter(message, "txt");
+			printf("\n출력:");
+			puts(message);
+			printf("출력 종료");
+			ptr = strtok(message, ">.");
 			while (ptr != NULL)
 			{
 				if(strcmp(ptr, ".txt"))
@@ -166,21 +224,23 @@ char *c_client_func(char *ip, char *port, char *input)
 					
 				sprintf(res_array, "%s\n%s", res_array, ptr);
 				//strcpy(res_array[del_idx], ptr);
-				printf("origin: %s\n", ptr);
-				printf("resar: %s\n",res_array);
+				//printf("origin: %s\n", ptr);
+				//printf("resar: %s\n",res_array);
 				//del_idx++;
 				}
 
 				// printf("string: %s\n", res_array[del_idx]);
 				//cal_array[del_idx] = atoi(ptr);
 				// printf("d: %d\n", cal_array[del_idx]);
-				ptr = strtok(NULL, "> ");
+				ptr = strtok(NULL, ">.");
 				
 			}
 		}
 		// printf("%s\n", ret);
 	}
 	close(sock);
+	
+	res_array = trim(res_array);
 	return (char*)res_array;
 }
 
