@@ -70,6 +70,7 @@ void read_command_and_send()
 char* trim(char* origin) {
 	
 	char* res_array = (char*)malloc(sizeof(char)*BUF_SIZE);
+	memset(res_array, 0, sizeof(char)*BUF_SIZE);
 	int idx = 0;
 	
 	int iter = 0;
@@ -78,17 +79,22 @@ char* trim(char* origin) {
 
 	for(iter = 0;origin[iter]!='\0';iter++) {
 		if(origin[iter]=='\n') {
-			if(empty==0) {
+			if(empty==0 && idx > 0) {
 				res_array[idx++] = '\n';
 			}
 			empty = 1;
 		} else if(origin[iter]!=' '&& origin[iter]!='\t') {
+			if(empty==1 && idx>0) {
+				res_array[idx-1] = 6;
+			}
+			
+			
 			res_array[idx++] = origin[iter];
 			empty = 0;
 		} else if(prev!=' '&& prev!='\t') {
 			res_array[idx++] = origin[iter];
 		}
-		prev = origin[idx];
+		prev = origin[iter];
 	}
 	res_array[idx] = '\0';
 	return res_array;
@@ -215,7 +221,7 @@ char *c_client_func(char *ip, char *port, char *input)
 			stringfilter(message, "txt");
 			printf("\n출력:");
 			puts(message);
-			printf("출력 종료");
+			printf("출력 종료\n");
 			ptr = strtok(message, ">.");
 			while (ptr != NULL)
 			{
