@@ -1,9 +1,9 @@
 ![header](https://capsule-render.vercel.app/api?text=SHARED!Calendar&fontSize=40&descSize=30)
-# SHARED! Calendar
+# 📅 SHARED! Calendar
 
 이 프로그램은 콘솔 환경에서도 편리한 일정 관리를 위해 개발되었습니다. 서버-클라이언트 모델을 채택하여 여러 클라이언트에서 접속하여 일정을 확인 및 수정할 수 있으며, 클라이언트 컴퓨터의 로컬 저장소가 삭제되더라도 데이터가 유실되지 않습니다.
 
-## 화면 구성 및 주요 기능
+## 📊 화면 구성 및 주요 기능
 
 - 캘린더 표시 화면: 선택한 월의 캘린더를 표시하고, 일정이 있는 날짜에 강조 표시가 되어 있어 쉽게 확인할 수 있습니다.
 - 일정 표시 화면: 선택한 날짜의 모든 일정을 한 눈에 확인할 수 있습니다.
@@ -13,12 +13,12 @@
   - 일정 날짜 변경: 일정이 변경된 경우 날짜를 변경할 수 있습니다.
   - 일정 삭제: 일정을 삭제할 수 있습니다.
 
-## 시스템 최소 요구 사항
+## 💻 시스템 최소 요구 사항
 
 - Debian 계열의 Linux(Debian, Ubuntu 등) 및 x86계열의 CPU가 필요합니다.
 - UNIX 및 다른 POSIX Linux도 호환되지만, 모든 동작이 정상적으로 실행됨을 보장하지는 않습니다.
 
-## 필요한 구성 요소 설치
+## 🌏 필요한 구성 요소 설치
 - ncurses 라이브러리를 설치해야 정상적으로 프로그램이 동작합니다.
 - apt-get을 이용하여 설치해 주세요.
 
@@ -27,7 +27,7 @@ sudo apt-get update
 sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
 
-## 사용 방법
+## 📑 사용 방법
 
 1. Repository Clone
 
@@ -50,7 +50,7 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
    ./input //클라이언트 시스템
    ```
 
-## 캘린더 프로그램 조작 방법
+## ⚒ 캘린더 프로그램 조작 방법
 
 ### 1. 메인 화면
 ![main](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/4e94886b-de7f-4808-87ec-80e80e23168b)
@@ -135,7 +135,7 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 - 프로그램 종료 시 q 를 입력하고 Enter 키를 누르면 종료됩니다.
 - 프로그램 오작동 방지를 위해 시스템 시그널을 이용한 Ctrl+C키 및 Ctrl+D키, Ctrl+\키는 동작하지 않습니다.
 
-## 기여 가이드 및 License
+## 🙋‍♂️ 기여 가이드 및 License
 ![by-nc-sa](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/a7e66dbe-b892-4a4b-8dfb-151a8e3bdbd3)
 
 이 프로젝트는 CC BY-NC-SA License로서 자유롭게 배포 및 이용이 가능하나, 상업적 이용 및 무단 라이센스 변경 배포는 금지됩니다.
