@@ -44,3 +44,11 @@
 
 ![main](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/4e94886b-de7f-4808-87ec-80e80e23168b)
 - 캘린더 프로그램의 메인 화면입니다.
+  - CALENDAR 메뉴
+   - 현재 월의 달력을 확인할 수 있습니다.
+  - CONTENTS 메뉴
+   - 선택한 날짜의 일정을 확인할 수 있습니다.
+  - USAGE EXAMPLE 메뉴
+   - 명령어 입력 방법과 예시를 확인할 수 있습니다.
+  - COMMAND 메뉴
+   - 캘린더 프로그램의 명령어를 입력할 수 있습니다.
