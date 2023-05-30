@@ -50,7 +50,17 @@
   - USAGE EXAMPLE 메뉴: 명령어 입력 방법과 예시를 확인할 수 있습니다.
   - COMMAND 메뉴: 캘린더 프로그램의 명령어를 입력할 수 있습니다.
 
-2. 캘린더에 일정 추가
+2. 캘린더에 일정 추가 (a 명령어)
 ![내용 추가](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/55bafd56-04f7-4dd9-97c3-2405ed6a30d4)
 - a 명령어를 이용하여 캘린더에 일정을 추가합니다.
 - 입력 예시: a (날짜) (제목)>(내용)
+- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
+
+3. 특정 일자의 일정을 확인 (C 명령어)
+![특정일자일정전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/f6622dc3-4f73-4e71-a9ae-dd0262113ef3)
+[명령어 입력 예시 화면]
+![특정일자일정후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/179db79d-6de7-4a3b-8547-75d3ca1dc25a)
+[명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
+- c 명령어를 이용하여 캘린더에 저장되어 있는 특정 일자의 일정 전체 목록을 확인할 수 있습니다.
+- 입력 예시: c (날짜)
+- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
