@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?text=SHARED!Calendar&fontSize=40&desc=Desc&descSize=30)
+![header](https://capsule-render.vercel.app/api?text=SHARED!Calendar&fontSize=40&descSize=30)
 ## SHARED! Calendar
 
 이 프로그램은 콘솔 환경에서도 편리한 일정 관리를 위해 개발되었습니다. 서버-클라이언트 모델을 채택하여 여러 클라이언트에서 접속하여 일정을 확인 및 수정할 수 있으며, 클라이언트 컴퓨터의 로컬 저장소가 삭제되더라도 데이터가 유실되지 않습니다.
