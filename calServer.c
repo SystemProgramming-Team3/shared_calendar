@@ -152,7 +152,7 @@ int main(int argc, char* argv[]){
 							continue;
 						}
 						mvSchedule(parsing[1], parsing[2], parsing[3]);
-						days = isMonDir(parsing[1]);
+						days = isMonDir(parsing[2]);
 						write(i, days, strlen(days));
 					}
 					else {
