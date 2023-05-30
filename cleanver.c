@@ -168,17 +168,20 @@ void option_a(char *string)
     sprintf(input, "%s.%s", data.yearstr, data.monthstr);
     //
     sprintf(origin, "a %s %s>%s ", data.yearmonthday, data.key, data.content);
+    char *cstring = malloc(30);
 
     if (!strcmp(input, current)) // 받은 str와 현재 년/월이 같으면
     {
         ret = a_client_func("127.0.0.1", "3000", origin);
         setOnFn = &onCurrent;
+        option_c(data.yearmonthday);
     }
     else
     {
         ret = a_client_func("127.0.0.1", "3000", origin);
         getOther(atoi(data.yearstr), atoi(data.monthstr));
         setOnFn = &onOther;
+        option_c(data.yearmonthday);
     }
     free(origin);
     free(input);
@@ -213,16 +216,16 @@ void option_mv(char *string)
     printf("%s %s %s ", current, input, origin);
     if (!strcmp(input, current)) // 옮기고자 하는 날
     {
-        printf("good");
         ret = mv_client_func("127.0.0.1", "3000", origin);
         setOnFn = &onCurrent;
+        // option_c(data.yearmonthday2);
     }
     else
     {
-        printf("ok");
         ret = mv_client_func("127.0.0.1", "3000", origin);
         getOther(atoi(data.yearstr), atoi(data.monthstr));
         setOnFn = &onOther;
+        // option_c(data.yearmonthday2);
     }
 }
 
@@ -235,24 +238,25 @@ void option_rm(char *string)
     char *string2 = malloc(10);
     strcpy(string2, data.yearmonthday);
     data.yearstr = strtok(string2, ".");
-    data.monthstr = strtok(string2, ".");
+    data.monthstr = strtok(NULL, ".");
     char *current = malloc(10);
     sprintf(current, "%04d.%02d", year, month);
     char *input = malloc(10);
     sprintf(input, "%s.%s", data.yearstr, data.monthstr);
-
     char *origin = malloc(40);
     sprintf(origin, "rm %s %s ", data.yearmonthday, data.key);
     if (!strcmp(input, current))
     {
         ret = rm_client_func("127.0.0.1", "3000", origin);
         setOnFn = &onCurrent;
+        option_c(data.yearmonthday);
     }
     else
     {
         ret = rm_client_func("127.0.0.1", "3000", origin);
         getOther(atoi(data.yearstr), atoi(data.monthstr));
         setOnFn = &onOther;
+        option_c(data.yearmonthday);
     }
 }
 
@@ -291,6 +295,7 @@ void setFunction(char *string)
     char *option = malloc(5);
     option = strtok(string, " ");
     string = strtok(NULL, "");
+    char *cstring = malloc(30);
     if (!strcmp(option, "cc"))
     {
         clientfunc = &cc_client_func;
@@ -302,7 +307,6 @@ void setFunction(char *string)
     }
     else if (!strcmp(option, "a"))
     {
-
         option_a(string); // yearmonthday key>content
     }
     else if (!strcmp(option, "mv"))
