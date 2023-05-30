@@ -16,6 +16,14 @@
 
 - Debian 계열의 Linux(또는 POSIX 계열의 Linux 또는 UNIX) 및 x86계열의 CPU가 필요합니다.
 
+### 필요한 구성 요소 설치
+- ncurses 라이브러리를 설치해야 정상적으로 프로그램이 동작합니다.
+- apt-get을 이용하여 설치해 주세요.
+
+```
+sudo apt-get update
+sudo apt-get install libncurses5-dev libncursesw5-dev
+```
 
 ### 사용 방법
 
