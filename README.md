@@ -54,13 +54,34 @@
 ![내용 추가](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/55bafd56-04f7-4dd9-97c3-2405ed6a30d4)
 - a 명령어를 이용하여 캘린더에 일정을 추가합니다.
 - 입력 예시: a (날짜) (제목)>(내용)
-- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
+- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다. (예: abcde라는 제목과 SystemProgramming이라는 내용의 일정을 2023년 5월 25일에 추가하려면 a 2023.05.25 abcde>SystemProgramming 으로 입력합니다.)
 
-3. 특정 일자의 일정을 확인 (C 명령어)
+3. 특정 일자의 일정을 확인 (c 명령어)
 ![특정일자일정전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/f6622dc3-4f73-4e71-a9ae-dd0262113ef3)
 [명령어 입력 예시 화면]
 ![특정일자일정후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/179db79d-6de7-4a3b-8547-75d3ca1dc25a)
 [명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
 - c 명령어를 이용하여 캘린더에 저장되어 있는 특정 일자의 일정 전체 목록을 확인할 수 있습니다.
 - 입력 예시: c (날짜)
-- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
+- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다. (예: 2023년 5월 25일의 일정을 확인하려면 c 2023.05.25 로 입력합니다.)
+
+4. 일정의 날짜를 변경 (mv 명령어)
+![날짜변경전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/709fb79e-66fc-48b5-8e59-b15b82bddde7)
+[명령어 입력 예시 화면]
+![날짜변경후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/d729bc56-4cda-4032-b60d-9555fe51c30e)
+[명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
+- mv 명령어를 이용하여 캘린더에 저장되어 있는 일정의 날짜를 변경할 수 있습니다.
+- 입력 예시: mv (변경 전 날짜) (변경 후 날짜) (일정의 제목)
+- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다. (예: abcde라는 제목의 일정을 2023년 5월 25일에서 2023년 5월 30일로 변경하려면 mv 2023.05.25 2023.05.30 abcde 로 입력합니다.)
+
+5. 해당 월의 전체 일정 확인 (cc 명령어)
+![cc명령어전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/f5488464-47cb-4523-a72a-374cbd26ffa9)
+[명령어 입력 예시 화면]
+![cc명령어후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/a0440d0d-7b9e-4331-9a4d-5164705f3597)
+[명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
+- cc 명령어를 이용하여 선택한 월의 일정이 존재하는 모든 날짜를 확인할 수 있습니다.
+- 입력 예시: cc (확인할 월)
+- 확인할 월은 YYYY.MM (연.월) 순서로 입력합니다. (예: 2023년 5월을 확인하려면 cc 2023.05 로 입력합니다)
+
+
+
