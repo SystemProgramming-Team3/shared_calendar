@@ -76,13 +76,13 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 
 3. 특정 일자의 일정을 확인 (c 명령어)
 ![특정일자일정전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/f6622dc3-4f73-4e71-a9ae-dd0262113ef3)
-<br>
+
 [명령어 입력 예시 화면]
-<br>
+
 ![특정일자일정후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/179db79d-6de7-4a3b-8547-75d3ca1dc25a)
-<br>
+
 [명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
-<br>
+
 - c 명령어를 이용하여 캘린더에 저장되어 있는 특정 일자의 일정 전체 목록을 확인할 수 있습니다.
 - 입력 예시: c (날짜)
 - 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
