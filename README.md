@@ -38,7 +38,7 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 2. 프로그램을 컴파일합니다. (또는 make 명령어 실행)
 
    ```
-   gcc -o input input.c calClient.c //클라이언트 시스템에서 실행
+   gcc -w -o calClient cleanver.c calClient.c -lncurses //클라이언트 시스템에서 실행
    gcc -o calServer calServer.c // 서버 시스템에서 실행
    ```
    make를 Shell에서 실행할 경우 Makefile의 Script에 의해 자동으로 컴파일되므로 gcc 명령어를 수동으로 실행하지 않아도 됩니다.
@@ -46,8 +46,8 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 4. 캘린더 프로그램을 실행합니다.
 
    ```
-   ./calServer (포트 번호) // 서버 시스템
-   ./input //클라이언트 시스템
+   ./calServer 3000(포트 번호) // 서버 시스템
+   ./calClient //클라이언트 시스템
    ```
 
 ## ⚒ 캘린더 프로그램 조작 방법
