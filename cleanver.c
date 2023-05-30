@@ -262,6 +262,9 @@ void option_rm(char *string)
 
 int main()
 {
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+    signal(SIGKILL, SIG_IGN);
     getcurrent();
     // default
     clientfunc = &cc_client_func;
