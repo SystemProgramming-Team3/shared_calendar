@@ -90,13 +90,13 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 
 4. 일정의 날짜를 변경 (mv 명령어)
 ![날짜변경전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/709fb79e-66fc-48b5-8e59-b15b82bddde7)
-<br>
+
 [명령어 입력 예시 화면]
-<br>
+
 ![날짜변경후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/d729bc56-4cda-4032-b60d-9555fe51c30e)
-<br>
+
 [명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
-<br>
+
 - mv 명령어를 이용하여 캘린더에 저장되어 있는 일정의 날짜를 변경할 수 있습니다.
 - 입력 예시: mv (변경 전 날짜) (변경 후 날짜) (일정의 제목)
 - 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
@@ -104,13 +104,13 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 
 5. 해당 월의 전체 일정 확인 (cc 명령어)
 ![cc명령어전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/f5488464-47cb-4523-a72a-374cbd26ffa9)
-<br>
+
 [명령어 입력 예시 화면]
-<br>
+
 ![cc명령어후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/a0440d0d-7b9e-4331-9a4d-5164705f3597)
-<br>
+
 [명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
-<br>
+
 - cc 명령어를 이용하여 선택한 월의 일정이 존재하는 모든 날짜를 확인할 수 있습니다.
 - 입력 예시: cc (확인할 월)
 - 확인할 월은 YYYY.MM (연.월) 순서로 입력합니다.
@@ -118,13 +118,13 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 
 6. 일정 삭제 (rm 명령어)
 ![rm명령어전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/46559d89-8aec-4c81-bd64-04a72a5366e1)
-<br>
+
 [명령어 입력 예시 화면]
-<br>
+
 ![rm명령어후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/34147fb6-3fab-423c-bbad-49318b5c0f50)
-<br>
+
 [명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
-<br>
+
 - rm 명령어를 이용하여 특정 일정을 삭제할 수 있습니다.
 - 입력 예시: rm (삭제할 일정이 속한 날짜) (삭제할 일정의 제목)
 - 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
