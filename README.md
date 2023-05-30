@@ -14,7 +14,8 @@
 
 ### 시스템 최소 요구 사항
 
-- Debian 계열의 Linux(또는 POSIX 계열의 Linux 또는 UNIX) 및 x86계열의 CPU가 필요합니다.
+- Debian 계열의 Linux(Debian, Ubuntu 등) 및 x86계열의 CPU가 필요합니다.
+- UNIX 및 다른 POSIX Linux도 호환되지만, 모든 동작이 정상적으로 실행됨을 보장하지는 않습니다.
 
 ### 필요한 구성 요소 설치
 - ncurses 라이브러리를 설치해야 정상적으로 프로그램이 동작합니다.
