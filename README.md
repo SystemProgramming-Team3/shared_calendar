@@ -42,9 +42,15 @@
 
 ### 캘린더 프로그램 조작 방법
 
+1. 메인 화면
 ![main](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/4e94886b-de7f-4808-87ec-80e80e23168b)
 - 캘린더 프로그램의 메인 화면입니다.
   - CALENDAR 메뉴: 현재 월의 달력을 확인할 수 있습니다.
   - CONTENTS 메뉴: 선택한 날짜의 일정을 확인할 수 있습니다.
   - USAGE EXAMPLE 메뉴: 명령어 입력 방법과 예시를 확인할 수 있습니다.
   - COMMAND 메뉴: 캘린더 프로그램의 명령어를 입력할 수 있습니다.
+
+2. 캘린더에 일정 추가
+![내용 추가](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/55bafd56-04f7-4dd9-97c3-2405ed6a30d4)
+- a 명령어를 이용하여 캘린더에 일정을 추가합니다.
+- 입력 예시: a (날짜) (제목)>(내용)
