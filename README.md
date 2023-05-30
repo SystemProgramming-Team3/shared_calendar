@@ -131,6 +131,10 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 - 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
 - (예: 2023년 5월 25일의 abcde라는 제목의 일정을 삭제하려면 rm 2023.05.25 abcde 로 입력합니다.)
 
+7. 프로그램 종료 (q 명령어)
+- 프로그램 종료 시 q 를 입력하고 Enter 키를 누르면 종료됩니다.
+- 프로그램 오작동 방지를 위해 시스템 시그널을 이용한 Ctrl+C키 및 Ctrl+D키, Ctrl+\키는 동작하지 않습니다.
+
 ### 기여 가이드 및 License
 ![by-nc-sa](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/a7e66dbe-b892-4a4b-8dfb-151a8e3bdbd3)
 
