@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include <signal.h>
 #include "calClient.h"
 
 int flag = 0;
@@ -218,14 +219,14 @@ void option_mv(char *string)
     {
         ret = mv_client_func("127.0.0.1", "3000", origin);
         setOnFn = &onCurrent;
-        // option_c(data.yearmonthday2);
+        option_c(data.yearmonthday2);
     }
     else
     {
         ret = mv_client_func("127.0.0.1", "3000", origin);
         getOther(atoi(data.yearstr), atoi(data.monthstr));
         setOnFn = &onOther;
-        // option_c(data.yearmonthday2);
+        option_c(data.yearmonthday2);
     }
 }
 
