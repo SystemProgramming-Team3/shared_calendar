@@ -296,7 +296,12 @@ void setFunction(char *string)
     option = strtok(string, " ");
     string = strtok(NULL, "");
     char *cstring = malloc(30);
-    if (!strcmp(option, "cc"))
+    if(!strcmp(option, "q"))
+    {
+        endwin();
+        exit(0);
+    }
+    else if (!strcmp(option, "cc"))
     {
         clientfunc = &cc_client_func;
         option_cc(string);
