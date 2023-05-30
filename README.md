@@ -40,3 +40,7 @@
    ./input //클라이언트 시스템
    ```
 
+### 캘린더 프로그램 조작 방법
+
+![main](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/4e94886b-de7f-4808-87ec-80e80e23168b)
+- 캘린더 프로그램의 메인 화면입니다.
