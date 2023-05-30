@@ -18,7 +18,7 @@ int* mv_client_func(char* ip, char* port, char* input);
 
 // client_func Function Test용 Stub Code (main function)
 
-/*
+
 int main(void)
 {
 	char input[256];
@@ -58,7 +58,7 @@ int main(void)
 	return 0;
 }
 
-*/
+
 
 void read_command_and_send()
 {
@@ -74,33 +74,37 @@ char* trim(char* origin) {
 	int idx = 0;
 	
 	int iter = 0;
-	int empty = 0;
-	int prev = '\0';
+	int empty = 1;  
+	int newline = 0; 
 
 	for(iter = 0;origin[iter]!='\0';iter++) {
 		if(origin[iter]=='\n') {
-			if(empty==0 && idx > 0) {
+			
+			while (idx > 0 && (res_array[idx-1] == ' ' || res_array[idx-1] == '\t')) {
+				idx--;
+			}
+			if (!newline) { 
 				res_array[idx++] = '\n';
 			}
-			empty = 1;
+			empty = 1;  
+			newline = 1; 
 		} else if(origin[iter]!=' '&& origin[iter]!='\t') {
-			if(empty==1 && idx>0) {
-				res_array[idx-1] = 6;
-			}
-			
-			
 			res_array[idx++] = origin[iter];
-			empty = 0;
-		} else if(prev!=' '&& prev!='\t') {
+			empty = 0;  
+			newline = 0; 
+		} else if (!empty) {  
 			res_array[idx++] = origin[iter];
 		}
-		prev = origin[iter];
+	}
+	
+	
+	while (idx > 0 && (res_array[idx-1] == ' ' || res_array[idx-1] == '\t' || res_array[idx-1] == '\n')) {
+		idx--;
 	}
 	res_array[idx] = '\0';
 	return res_array;
 }
-				
-	
+
 
 void stringfilter(char *str, char *findstr) {
 	int length = strlen(findstr);
@@ -216,12 +220,12 @@ char *c_client_func(char *ip, char *port, char *input)
 				findptr++;
 			}
 			*/
-			printf("location: %s", message);
+			//printf("location: %s", message);
 			
 			stringfilter(message, "txt");
-			printf("\n출력:");
-			puts(message);
-			printf("출력 종료\n");
+			// printf("\n출력:");
+			// puts(message);
+			// printf("출력 종료\n");
 			ptr = strtok(message, ">.");
 			while (ptr != NULL)
 			{
