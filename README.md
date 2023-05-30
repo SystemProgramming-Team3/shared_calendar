@@ -65,6 +65,7 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 [명령어 입력 예시 화면]
 <br>
 ![cc실행이후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/01b7dbdc-ab63-42de-a974-8ed01b4a2c6b)
+
 <br>
 [명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
 <br>
