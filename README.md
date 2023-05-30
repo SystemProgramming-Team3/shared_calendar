@@ -129,3 +129,12 @@ sudo apt-get install libncurses5-dev libncursesw5-dev
 - 입력 예시: rm (삭제할 일정이 속한 날짜) (삭제할 일정의 제목)
 - 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다.
 - (예: 2023년 5월 25일의 abcde라는 제목의 일정을 삭제하려면 rm 2023.05.25 abcde 로 입력합니다.)
+
+### 기여 가이드 및 License
+![by-nc-sa](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/a7e66dbe-b892-4a4b-8dfb-151a8e3bdbd3)
+
+이 프로젝트는 CC BY-NC-SA License로서 자유롭게 배포 및 이용이 가능하나, 상업적 이용 및 무단 라이센스 변경 배포는 금지됩니다.
+이 프로젝트의 기여는 다음과 같은 방식으로 진행할 수 있습니다.
+- 프로젝트 버그 리포트
+  - 프로젝트에서 버그가 발견된 경우 Github의 Issues에 올려주세요
+  - Pull Request는 저희 팀원만 가능하므로, 필요한 경우 사전에 연락 부탁드립니다.
