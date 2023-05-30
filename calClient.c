@@ -18,7 +18,7 @@ int* mv_client_func(char* ip, char* port, char* input);
 
 // client_func Function Test용 Stub Code (main function)
 
-
+/*
 int main(void)
 {
 	char input[256];
@@ -57,7 +57,7 @@ int main(void)
 
 	return 0;
 }
-
+*/
 
 
 void read_command_and_send()
