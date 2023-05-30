@@ -83,5 +83,11 @@
 - 입력 예시: cc (확인할 월)
 - 확인할 월은 YYYY.MM (연.월) 순서로 입력합니다. (예: 2023년 5월을 확인하려면 cc 2023.05 로 입력합니다)
 
-
-
+6. 일정 삭제 (rm 명령어)
+![rm명령어전](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/46559d89-8aec-4c81-bd64-04a72a5366e1)
+[명령어 입력 예시 화면]
+![rm명령어후](https://github.com/SystemProgramming-Team3/shared_calendar/assets/62194473/34147fb6-3fab-423c-bbad-49318b5c0f50)
+[명령어 입력 후 Enter 키를 누르고 명령이 실행된 화면]
+- rm 명령어를 이용하여 특정 일정을 삭제할 수 있습니다.
+- 입력 예시: rm (삭제할 일정이 속한 날짜) (삭제할 일정의 제목)
+- 날짜의 입력 예시는 YYYY.MM.DD (연.월.일) 입니다. (예: 2023년 5월 25일의 abcde라는 제목의 일정을 삭제하려면 rm 2023.05.25 abcde 로 입력합니다.)
